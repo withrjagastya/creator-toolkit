@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free, offline-first toolkit for captions, hashtags, writing analysis and reusable AI prompts." />
+  <meta name="theme-color" content="#101726" />
+  <title>Creator Toolkit — Make your next idea happen</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0d17;
+      --panel: #131a2a;
+      --panel-alt: #171f31;
+      --line: #2a344a;
+      --text: #f6f7fb;
+      --muted: #a2aec4;
+      --accent: #9b8cff;
+      --aqua: #7de3d4;
+      --outline: #c1b9ff;
+      --radius: 19px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body::before { content:""; position: fixed; z-index: -1; inset: 0; pointer-events: none; background: radial-gradient(ellipse 42% 32% at 80% 0, #6f53bb2e, transparent 75%), radial-gradient(ellipse 45% 50% at 0 35%, #168b9b15, transparent 75%); }
+    a { color: inherit; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 3px solid var(--outline); outline-offset: 3px; }
+    .container { width: min(1160px, calc(100% - 44px)); margin-inline: auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 0; border-bottom: 1px solid #ffffff13; }
+    .brand { display: flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 760; letter-spacing: -.55px; text-decoration: none; }
+    .mark { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 11px; color: #10101b; background: linear-gradient(135deg, #a99dff, #88dfd2); font-weight: 900; font-size: 23px; }
+    .top-pill { font-size: 12px; color: #d4dcf1; padding: 7px 12px; border-radius: 50px; border: 1px solid #ffffff26; background: #ffffff08; }
+    .hero { display: grid; grid-template-columns: 1fr 330px; align-items: center; gap: 30px; padding: 72px 0 58px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--aqua); letter-spacing: 1.8px; text-transform: uppercase; font-size: 11px; font-weight: 780; }
+    .eyebrow::before { content: ""; width: 16px; height: 2px; background: currentColor; }
+    h1 { font-size: clamp(38px, 6.2vw, 69px); letter-spacing: -3.2px; line-height: 1.07; margin: 16px 0 18px; font-weight: 800; }
+    h1 span { color: #aca3ff; }
+    .hero p { color: var(--muted); font-size: 17px; max-width: 580px; margin: 0; }
+    .hero-art { position: relative; min-height: 236px; border: 1px solid #bcaaff2b; background: linear-gradient(150deg,#a99dff23,#111829 72%); border-radius: 26px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .hero-art::before { content: ""; position: absolute; width: 260px; height: 260px; border: 1px solid #b8b1ff30; border-radius: 50%; box-shadow: 0 0 0 40px #a69cff0a, 0 0 0 85px #a69cff06; }
+    .hero-art .big-mark { position: relative; width: 104px; height: 104px; transform: rotate(-12deg); display: grid; place-items: center; background: linear-gradient(145deg,#9c90ff,#7fe3d6); border-radius: 28px; color:#142239; font-size: 64px; font-weight: 900; box-shadow: 0 27px 60px #0007; }
+    .float-label { position: absolute; color: #e6e3ff; padding: 8px 12px; background: #222c44; border: 1px solid #ffffff21; border-radius: 10px; font-size: 12px; font-weight: 700; }
+    .float-one { top: 30px; left: 25px; transform: rotate(-7deg); }
+    .float-two { bottom: 28px; right: 21px; transform: rotate(7deg); }
+    .benefits { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
+    .benefits span { color: #d2def3; border: 1px solid #33405a; background: #ffffff07; font-size: 12px; padding: 7px 11px; border-radius: 99px; }
+    .workspace { background: #101624; border: 1px solid #273045; border-radius: 26px; box-shadow: 0 36px 120px #0004; overflow: hidden; margin-bottom: 56px; }
+    .workspace-top { padding: 24px 28px 0; }
+    .workspace-top h2 { font-size: 23px; margin: 0 0 3px; letter-spacing: -.65px; }
+    .workspace-top p { color: var(--muted); margin: 0 0 21px; font-size: 13px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 7px; border-bottom: 1px solid #28334b; padding: 0 20px; }
+    .tab { border: 0; border-bottom: 2px solid transparent; background: none; color: #a9b4c8; padding: 15px 14px; font-size: 13px; font-weight: 670; margin-bottom: -1px; }
+    .tab[aria-selected="true"] { color: #dcd7ff; border-bottom-color: var(--accent); }
+    .tab:hover { color: #fff; }
+    .tab-panel { display: none; padding: 28px; }
+    .tab-panel.active { display: block; }
+    .panel-header { margin-bottom: 25px; }
+    .panel-header h3 { margin: 0 0 5px; font-size: 22px; letter-spacing: -.5px; }
+    .panel-header p { margin: 0; color: var(--muted); max-width: 740px; font-size: 13px; }
+    .tool-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 25px; }
+    .input-card,.output-card { min-width: 0; }
+    .output-card { padding: 20px; background: var(--panel-alt); border: 1px solid #2b354b; border-radius: var(--radius); display: flex; flex-direction: column; }
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; color: #e4e8f3; font-size: 12px; font-weight: 650; }
+    input, textarea, select { width: 100%; border: 1px solid #344059; background: #0e1422; color: var(--text); border-radius: 11px; padding: 12px 13px; font-size: 14px; outline: none; }
+    textarea { min-height: 104px; resize: vertical; }
+    textarea:focus, input:focus, select:focus { border-color: #a99dff; box-shadow: 0 0 0 3px #a99dff18; }
+    input::placeholder,textarea::placeholder { color: #758199; }
+    .helper { color: var(--muted); font-size: 12px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 17px; border-radius: 10px; font-weight: 750; font-size: 13px; border: 1px solid transparent; }
+    .primary { color: #181529; background: linear-gradient(115deg,#b2a7ff,#8ce5dc); }
+    .primary:hover { filter: brightness(1.08); }
+    .secondary { color: #e2e6f1; background: #222c40; border-color: #3a465e; }
+    .secondary:hover { background: #29354d; }
+    .output-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .output-head h4 { margin: 0; color: #f4f4fb; font-size: 14px; }
+    .output-box { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; margin: 15px 0 18px; min-height: 188px; padding: 18px; background: #0b111e; border: 1px solid #2e3a52; border-radius: 12px; color: #dce5f5; font-size: 14px; line-height: 1.75; }
+    .placeholder { color: #7e8ba1; }
+    .output-foot { margin-top: auto; display:flex; align-items: center; justify-content: space-between; flex-wrap:wrap; gap: 10px; }
+    .note { color: #8591aa; font-size: 11px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin: 15px 0; }
+    .stat { background: #0b111e; border: 1px solid #303b51; border-radius: 13px; padding: 18px; }
+    .stat strong { font-size: 29px; line-height: 1.2; display: block; letter-spacing: -.8px; color: #d0caff; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .footer { border-top: 1px solid #252e40; padding: 25px 0 35px; display:flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+    .footer b { color: #dce3f2; }
+    #toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events:none; background: #d7fff4; color: #17332e; font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 10px; box-shadow: 0 10px 40px #0008; transition: opacity .2s, transform .2s; z-index: 10; }
+    #toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    @media (max-width: 790px) { .hero { grid-template-columns:1fr; padding: 50px 0 35px; }.hero-art { display:none; } .tool-grid { grid-template-columns:1fr; } }
+    @media (max-width: 560px) { .container { width:min(100% - 28px, 1160px); } h1 { letter-spacing:-2px; } .hero p { font-size:15px; } .workspace-top { padding:21px 18px 0; } .tabs { padding:0 10px; gap:0; } .tab { padding:11px 9px; font-size:11.5px; } .tab-panel { padding:20px 16px; } .fields { grid-template-columns:1fr; gap:0; } .output-card { padding:16px; } .top-pill { display:none; } }
+  </style>
+</head>
+<body>
+  <header class="container topbar">
+    <a class="brand" href="#top" aria-label="Creator Toolkit home"><span class="mark" aria-hidden="true">✳</span> Creator Toolkit</a>
+    <span class="top-pill">✧ Free · Private · Runs in your browser</span>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero" aria-label="Introduction">
+      <div>
+        <div class="eyebrow">Tools for people who make things</div>
+        <h1>Make your next<br /><span>idea happen.</span></h1>
+        <p>A collection of simple, useful tools for writers, students, video editors, and content creators. No accounts. No installation. Just create.</p>
+        <div class="benefits"><span>✓ Works offline</span><span>✓ No API key needed</span><span>✓ Open source starter</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true"><span class="float-label float-one"># Create more</span><span class="big-mark">✳</span><span class="float-label float-two">✦ Simplify your workflow</span></div>
+    </section>
+
+    <section class="workspace" aria-label="Creator tools">
+      <div class="workspace-top"><h2>Your creative workspace</h2><p>Choose a tool below. Everything works directly inside your browser.</p></div>
+      <div class="tabs" role="tablist" aria-label="Select a tool">
+        <button id="tab-caption" class="tab" role="tab" aria-selected="true" aria-controls="panel-caption" tabindex="0" data-target="caption">✦ Caption Helper</button>
+        <button id="tab-tags" class="tab" role="tab" aria-selected="false" aria-controls="panel-tags" tabindex="-1" data-target="tags"># Hashtag Maker</button>
+        <button id="tab-analyzer" class="tab" role="tab" aria-selected="false" aria-controls="panel-analyzer" tabindex="-1" data-target="analyzer">▤ Word Counter</button>
+        <button id="tab-prompt" class="tab" role="tab" aria-selected="false" aria-controls="panel-prompt" tabindex="-1" data-target="prompt">◈ AI Prompt Builder</button>
+      </div>
+
+      <section id="panel-caption" class="tab-panel active" role="tabpanel" aria-labelledby="tab-caption">
+        <div class="panel-header"><h3>Caption Helper</h3><p>Get three ready-to-edit caption drafts for your next post. These are template-generated drafts, not AI-generated text.</p></div>
+        <div class="tool-grid">
+          <div class="input-card">
+            <div class="field"><label for="caption-topic">What is your post about?</label><input id="caption-topic" placeholder="e.g. Our new graphic design workshop" maxlength="180" /></div>
+            <div class="fields">
+              <div class="field"><label for="caption-platform">Platform</label><select id="caption-platform"><option value="Instagram">Instagram</option><option value="LinkedIn">LinkedIn</option><option value="YouTube">YouTube</option></select></div>
+              <div class="field"><label for="caption-tone">Tone</label><select id="caption-tone"><option value="Engaging">Engaging</option><option value="Professional">Professional</option><option value="Friendly">Friendly</option></select></div>
+            </div>
+            <div class="field"><label for="caption-cta">Call to action (optional)</label><input id="caption-cta" placeholder="e.g. Register today" maxlength="120" /></div>
+            <div class="actions"><button class="button primary" id="caption-generate">Generate captions ↗</button><button class="button secondary" id="caption-example">Try example</button></div>
+          </div>
+          <div class="output-card"><div class="output-head"><h4>Your caption drafts</h4><span class="note">3 versions</span></div><div id="caption-result" class="output-box placeholder" aria-live="polite">Your caption options will appear here.</div><div class="output-foot"><span class="note">Edit the copy to match your actual post.</span><button class="button secondary" data-copy="caption-result">Copy text</button></div></div>
+        </div>
+      </section>
+
+      <section id="panel-tags" class="tab-panel" role="tabpanel" aria-labelledby="tab-tags" hidden>
+        <div class="panel-header"><h3>Hashtag Maker</h3><p>Turn your keywords into tidy, reusable hashtags. Suggestions are keyword-based and do not claim to reflect live trends.</p></div>
+        <div class="tool-grid">
+          <div class="input-card"><div class="field"><label for="tags-keywords">Keywords (separate with commas)</label><textarea id="tags-keywords" placeholder="e.g. graphic design, creativity, student projects" maxlength="500"></textarea><span class="helper">Use topics relevant to your post. 2–5 keywords work well.</span></div><div class="actions"><button class="button primary" id="tags-generate">Generate hashtags ↗</button><button class="button secondary" id="tags-example">Try example</button></div></div>
+          <div class="output-card"><div class="output-head"><h4>Suggested hashtags</h4><span class="note">Up to 15 tags</span></div><div id="tags-result" class="output-box placeholder" aria-live="polite">Your hashtags will appear here.</div><div class="output-foot"><span class="note">No real-time trend data is used.</span><button class="button secondary" data-copy="tags-result">Copy hashtags</button></div></div>
+        </div>
+      </section>
+
+      <section id="panel-analyzer" class="tab-panel" role="tabpanel" aria-labelledby="tab-analyzer" hidden>
+        <div class="panel-header"><h3>Writing Analyzer</h3><p>Count words and characters while you type. Reading time is estimated using 200 words per minute.</p></div>
+        <div class="tool-grid">
+          <div class="input-card"><div class="field"><label for="analyzer-text">Paste or type your text</label><textarea id="analyzer-text" style="min-height:260px" placeholder="Start typing your script, caption, article or notes..."></textarea><span class="helper">Your text stays on this device — nothing is uploaded.</span></div><div class="actions"><button class="button secondary" id="analyzer-example">Try example</button><button class="button secondary" id="analyzer-clear">Clear text</button></div></div>
+          <div class="output-card"><div class="output-head"><h4>Live statistics</h4><span class="note">Updates automatically</span></div><div class="stat-grid"><div class="stat"><strong id="count-words">0</strong><span>Words</span></div><div class="stat"><strong id="count-chars">0</strong><span>Characters</span></div><div class="stat"><strong id="count-sentences">0</strong><span>Sentences (approx.)</span></div><div class="stat"><strong id="count-minutes">0 sec</strong><span>Reading time (approx.)</span></div></div><div class="output-foot"><span class="note">Works with English and Unicode text.</span><button class="button secondary" data-copy="analyzer-text">Copy text</button></div></div>
+        </div>
+      </section>
+
+      <section id="panel-prompt" class="tab-panel" role="tabpanel" aria-labelledby="tab-prompt" hidden>
+        <div class="panel-header"><h3>AI Prompt Builder</h3><p>Build a clear prompt to paste into Claude, ChatGPT or another AI assistant. This tool creates prompts; it does not call an AI service.</p></div>
+        <div class="tool-grid">
+          <div class="input-card"><div class="field"><label for="prompt-task">What do you want the AI to do?</label><input id="prompt-task" placeholder="e.g. Write a 30-second product video script" maxlength="240" /></div>
+            <div class="fields"><div class="field"><label for="prompt-audience">Target audience</label><input id="prompt-audience" placeholder="e.g. College students" maxlength="120" /></div><div class="field"><label for="prompt-tone">Tone</label><select id="prompt-tone"><option>Clear and professional</option><option>Friendly and conversational</option><option>Bold and creative</option><option>Simple and educational</option></select></div></div>
+            <div class="fields"><div class="field"><label for="prompt-language">Language</label><select id="prompt-language"><option>English</option><option>Marathi</option><option>Hindi</option><option>English and Marathi</option></select></div><div class="field"><label for="prompt-format">Output format</label><select id="prompt-format"><option>Plain text</option><option>Bullet points</option><option>Step-by-step instructions</option><option>Social media post</option><option>Video script</option></select></div></div>
+            <div class="field"><label for="prompt-context">Important context or constraints (optional)</label><textarea id="prompt-context" placeholder="e.g. Keep it under 100 words. No emojis." maxlength="1000"></textarea></div>
+            <div class="actions"><button class="button primary" id="prompt-generate">Build my prompt ↗</button><button class="button secondary" id="prompt-example">Try example</button></div>
+          </div>
+          <div class="output-card"><div class="output-head"><h4>Ready-to-use AI prompt</h4><span class="note">Copy into your AI tool</span></div><div id="prompt-result" class="output-box placeholder" aria-live="polite">Your AI prompt will appear here.</div><div class="output-foot"><span class="note">Review your prompt before use.</span><button class="button secondary" data-copy="prompt-result">Copy prompt</button></div></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer class="container footer"><span><b>Creator Toolkit</b> — An open-source starter project.</span><span>Made for curious creators. No account, backend or API key required.</span></footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script>
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+    let toastTimer;
+    function showToast(message) {
+      const toast = $('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+    function showResult(id, value) {
+      const target = $(id);
+      target.textContent = value;
+      target.classList.remove('placeholder');
+    }
+    function switchTab(id) {
+      tabs.forEach(tab => {
+        const isActive = tab.dataset.target === id;
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        const isActive = panel.id === 'panel-' + id;
+        panel.hidden = !isActive;
+        panel.classList.toggle('active', isActive);
+      });
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.target));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        switchTab(tabs[next].dataset.target);
+        tabs[next].focus();
+      });
+    });
+
+    const platformStyles = {
+      Instagram: { opener: '✨', closer: '💬' },
+      LinkedIn: { opener: 'A quick update:', closer: 'What are your thoughts?' },
+      YouTube: { opener: '🎬 New video idea:', closer: 'Let us know in the comments!' }
+    };
+    function generateCaptions() {
+      const topic = $('caption-topic').value.trim();
+      if (!topic) { showToast('Please enter a topic first.'); $('caption-topic').focus(); return; }
+      const platform = $('caption-platform').value;
+      const tone = $('caption-tone').value;
+      const cta = $('caption-cta').value.trim() || (platform === 'YouTube' ? 'Watch and share your thoughts!' : 'Tell us what you think!');
+      const hook = platformStyles[platform];
+      const cleanTopic = topic.replace(/[.!?\s]+$/u, '');
+      const intro = tone === 'Professional' ? `We're pleased to share ${cleanTopic}.` : tone === 'Friendly' ? `Hey everyone! Let's talk about ${cleanTopic}.` : `Something exciting is happening: ${cleanTopic}!`;
+      const lines = [
+        `OPTION 1 · SHORT & DIRECT\n\n${hook.opener} ${intro}\n\n${cta}`,
+        `OPTION 2 · COMMUNITY FOCUSED\n\n${cleanTopic} — we'd love to hear your perspective. ${hook.closer}\n\n${cta}`,
+        `OPTION 3 · STORY STARTER\n\nEvery big idea begins with a first step. Today, that step is ${cleanTopic}.\n\n${cta}`
+      ];
+      showResult('caption-result', lines.join('\n\n──────────────\n\n'));
+    }
+    $('caption-generate').addEventListener('click', generateCaptions);
+    $('caption-example').addEventListener('click', () => { $('caption-topic').value = 'a new graphic design workshop for beginners'; $('caption-cta').value = 'Save your seat today!'; $('caption-platform').value = 'Instagram'; $('caption-tone').value = 'Engaging'; generateCaptions(); });
+
+    function makeHashtag(raw) {
+      const words = raw.normalize('NFKC').replace(/[^\p{L}\p{N}\s]/gu, ' ').trim().split(/\s+/u).filter(Boolean);
+      return words.length ? '#' + words.map(word => word.slice(0,1).toLocaleUpperCase() + word.slice(1)).join('') : '';
+    }
+    function generateTags() {
+      const input = $('tags-keywords').value;
+      const chunks = input.split(/[,;\n]/u).map(v => v.trim()).filter(Boolean);
+      if (!chunks.length) { showToast('Please enter at least one keyword.'); $('tags-keywords').focus(); return; }
+      const result = new Set();
+      chunks.forEach(chunk => { const tag = makeHashtag(chunk); if (tag) result.add(tag); });
+      const wordCandidates = chunks.flatMap(chunk => chunk.split(/\s+/u)).filter(word => word.length > 3 && !/^(with|from|that|this|your|the)$/iu.test(word));
+      wordCandidates.forEach(word => { const tag = makeHashtag(word); if (tag) result.add(tag); });
+      ['CreativeCommunity', 'LearnAndCreate', 'CreatorsOfToday', 'MadeWithPassion', 'NewIdeas', 'KeepCreating'].forEach(tag => result.add('#' + tag));
+      showResult('tags-result', [...result].slice(0, 15).join('  '));
+    }
+    $('tags-generate').addEventListener('click', generateTags);
+    $('tags-example').addEventListener('click', () => { $('tags-keywords').value = 'graphic design, typography, content creation, student creativity'; generateTags(); });
+
+    function countWords(value) {
+      if (!value.trim()) return 0;
+      if (typeof Intl.Segmenter === 'function') {
+        return [...new Intl.Segmenter(undefined, { granularity: 'word' }).segment(value)].filter(segment => segment.isWordLike).length;
+      }
+      return (value.match(/\S+/gu) || []).length;
+    }
+    function updateAnalysis() {
+      const value = $('analyzer-text').value;
+      const words = countWords(value);
+      const chars = Array.from(value).length;
+      const sentences = value.trim() ? (value.match(/[.!?।]+(?:\s|$)/gu) || []).length || 1 : 0;
+      const seconds = Math.ceil(words / 200 * 60);
+      $('count-words').textContent = words.toLocaleString();
+      $('count-chars').textContent = chars.toLocaleString();
+      $('count-sentences').textContent = sentences.toLocaleString();
+      $('count-minutes').textContent = seconds < 60 ? `${seconds} sec` : `${Math.ceil(seconds / 60)} min`;
+    }
+    $('analyzer-text').addEventListener('input', updateAnalysis);
+    $('analyzer-example').addEventListener('click', () => { $('analyzer-text').value = 'Great ideas begin with curiosity. Build something small, share it with others, and keep improving it. A little progress every day makes a difference.'; updateAnalysis(); });
+    $('analyzer-clear').addEventListener('click', () => { $('analyzer-text').value = ''; updateAnalysis(); });
+
+    function generatePrompt() {
+      const task = $('prompt-task').value.trim();
+      if (!task) { showToast('Please describe your task first.'); $('prompt-task').focus(); return; }
+      const audience = $('prompt-audience').value.trim();
+      const context = $('prompt-context').value.trim();
+      const prompt = [
+        'You are a skilled assistant helping a content creator.',
+        '',
+        `TASK\n${task}`,
+        audience ? `\nTARGET AUDIENCE\n${audience}` : '',
+        `\nTONE\n${$('prompt-tone').value}`,
+        `\nLANGUAGE\n${$('prompt-language').value}`,
+        `\nOUTPUT FORMAT\n${$('prompt-format').value}`,
+        context ? `\nADDITIONAL CONTEXT / CONSTRAINTS\n${context}` : '',
+        '\nQUALITY REQUIREMENTS\n- Make the output practical and ready to use.\n- Do not invent specific facts, metrics, or sources.\n- If essential information is missing, state assumptions clearly.\n- Avoid unnecessary filler.'
+      ].filter(Boolean).join('\n');
+      showResult('prompt-result', prompt);
+    }
+    $('prompt-generate').addEventListener('click', generatePrompt);
+    $('prompt-example').addEventListener('click', () => { $('prompt-task').value = 'Write a 30-second promotional reel script for a creative workshop'; $('prompt-audience').value = 'Students and young creators'; $('prompt-tone').value = 'Bold and creative'; $('prompt-language').value = 'Marathi'; $('prompt-format').value = 'Video script'; $('prompt-context').value = 'Give only the spoken script. Avoid headings and filming directions.'; generatePrompt(); });
+
+    document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+      const target = $(button.dataset.copy);
+      const value = target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement ? target.value : target.textContent;
+      if (!value || target.classList.contains('placeholder')) { showToast('Nothing to copy yet.'); return; }
+      try {
+        if (!navigator.clipboard || !window.isSecureContext) throw new Error('Clipboard API unavailable');
+        await navigator.clipboard.writeText(value);
+        showToast('Copied to clipboard!');
+      } catch (_) {
+        // Reliable fallback for file:// and older browsers.
+        const scratch = document.createElement('textarea');
+        scratch.value = value;
+        scratch.style.position = 'fixed'; scratch.style.left = '-9999px';
+        document.body.appendChild(scratch);
+        scratch.select();
+        const copied = document.execCommand('copy');
+        scratch.remove();
+        showToast(copied ? 'Copied to clipboard!' : 'Please select and copy the text manually.');
+      }
+    }));
+    updateAnalysis();
+  </script>
+</body>
+</html>
